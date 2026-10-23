@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "src/app/layout.js", "src/app/page.js", "src/components/companies/HiringCompanies.jsx", "src/components/featured/FeaturedSection.jsx", "src/components/footer/Footer.jsx", "src/components/header/Header.jsx", "src/components/hero/Hero.jsx", "src/components/mentorship/MentorshipSection.jsx", "src/components/modals/Modals.jsx", "src/components/opportunities/OpportunitiesSection.jsx", "src/components/practice/PracticeSection.jsx", "src/components/sidebar/Sidebar.jsx", "src/components/splash/SplashScreen.jsx", "src/components/ui/UnstopLogo.jsx"  ],
   "exclude": ["node_modules"]
 }
