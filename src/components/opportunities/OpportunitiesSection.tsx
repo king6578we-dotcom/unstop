@@ -177,17 +177,17 @@ export const OpportunitiesSection: React.FC<OpportunitiesSectionProps> = ({
   });
 
   return (
-    <section id="opportunities" className="py-6 border-t border-slate-200/80 select-none">
-      {/* Section Header */}
+    <section
+      id="opportunities"
+      className="mx-auto w-full min-w-0 max-w-[980px] bg-white py-5 px-2 sm:px-4 font-[Arial,Helvetica,sans-serif] select-none"
+    >
+      {/* Section Header Matching Role-Based Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-6 bg-[#0073e6] rounded-full"></span>
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              Explore Top Opportunities
-            </h2>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+        <div className="relative min-w-0 pl-3.5 before:absolute before:inset-y-0 before:left-0 before:w-[4px] before:rounded-r-full before:bg-[#0073e6]">
+          <h2 className="text-[21px] font-semibold leading-[1.2] text-[#383838] sm:text-[26px]">
+            Explore Top Opportunities
+          </h2>
+          <p className="mt-0.5 text-[13px] font-normal leading-[20px] text-[#777] sm:text-[15px]">
             Handpicked roles and high-impact challenges from leading tech &amp; consulting giants.
           </p>
         </div>

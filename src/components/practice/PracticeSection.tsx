@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { PRACTICE_TESTS } from '@/data/mockData';
-import { FileCheck, Clock, PlayCircle } from 'lucide-react';
+import { FileCheck, Clock, PlayCircle, ArrowRight } from 'lucide-react';
 import { PracticeTest } from '@/types';
 
 interface PracticeSectionProps {
@@ -22,19 +22,32 @@ export const PracticeSection: React.FC<PracticeSectionProps> = ({ onStartTest })
   };
 
   return (
-    <section id="mock-tests" className="py-6 border-t border-slate-200/80">
-      <div className="flex items-center justify-between mb-5">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-6 bg-[#0073e6] rounded-full"></span>
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              Mock Tests &amp; Prep Zone
-            </h2>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+    <section
+      id="mock-tests"
+      className="mx-auto w-full min-w-0 max-w-[980px] bg-white py-5 px-2 sm:px-4 font-[Arial,Helvetica,sans-serif] select-none border-t border-slate-200/80"
+    >
+      {/* Header Matching Role-Based Section */}
+      <div className="flex items-center justify-between gap-4 mb-5">
+        <div className="relative min-w-0 pl-3.5 before:absolute before:inset-y-0 before:left-0 before:w-[4px] before:rounded-r-full before:bg-[#0073e6]">
+          <h2 className="text-[21px] font-semibold leading-[1.2] text-[#383838] sm:text-[26px]">
+            Mock Tests &amp; Prep Zone
+          </h2>
+          <p className="mt-0.5 text-[13px] font-normal leading-[20px] text-[#777] sm:text-[15px]">
             Sharpen your coding skills, aptitude speed, and system design intuition with timed practice tests.
           </p>
         </div>
+
+        {/* View All Pill with Blue Circular Arrow Button */}
+        <button
+          type="button"
+          onClick={() => alert('Viewing all 200+ Practice Tests & Assessments')}
+          className="inline-flex h-[38px] shrink-0 items-center justify-center gap-2 rounded-full border border-[#b8d8ff] bg-[#f3f8ff] px-4 text-[14px] font-medium text-[#0073e6] transition-colors hover:bg-[#e6f1ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0073e6] sm:text-[15px] cursor-pointer"
+        >
+          <span>View All</span>
+          <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-[#0073e6] text-white">
+            <ArrowRight size={11} strokeWidth={2.5} aria-hidden="true" />
+          </span>
+        </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

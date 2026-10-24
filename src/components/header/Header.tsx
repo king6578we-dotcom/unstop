@@ -1,24 +1,23 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import LoginRaw, { LoginPage as NamedLoginPage, type LoginPageProps } from '@/components/login/Login';
+
+const LoginPage: React.ComponentType<LoginPageProps> =
+  (LoginRaw as any)?.default || NamedLoginPage || (LoginRaw as unknown as React.ComponentType<LoginPageProps>);
 import {
   Search,
   LogIn,
   Menu,
   X,
   ChevronsRight,
-  Briefcase,
+  ChevronsLeft,
   Trophy,
   Puzzle,
-  Terminal,
   Sparkles,
   GraduationCap,
   Mic,
-  PenTool,
   PartyPopper,
-  UserCheck,
   BookOpen,
 } from 'lucide-react';
 const FOCUS = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0073e6] focus-visible:ring-offset-2';
@@ -164,7 +163,7 @@ function SearchDropdown({ id, isOpen, onClose, onSelectItem }: SearchDropdownPro
       id={id}
       role="group"
       aria-label="Explore search categories"
-      className="absolute left-0 top-full z-50 mt-2.5 w-[540px] sm:w-[580px] md:w-[600px] max-w-[calc(100vw-32px)] overflow-hidden rounded-[24px] border border-slate-200/90 bg-white p-5 shadow-[0_12px_36px_rgba(0,0,0,0.12)]"
+      className="absolute left-1/2 -translate-x-1/2 top-full z-[60] mt-2.5 w-[540px] sm:w-[580px] md:w-[600px] max-w-[calc(100vw-32px)] overflow-hidden rounded-[24px] border border-slate-200/90 bg-white p-5 shadow-[0_12px_36px_rgba(0,0,0,0.12)]"
       onMouseDown={(e) => e.stopPropagation()}
     >
       {/* "Explore" Header matching photo */}
@@ -209,6 +208,8 @@ function SearchDropdown({ id, isOpen, onClose, onSelectItem }: SearchDropdownPro
 }
 
 export interface HeaderProps {
+  /** Authentication callbacks for the same-page login screen. */
+  loginPageProps?: Omit<LoginPageProps, 'onClose'>;
   searchQuery?: string;
   setSearchQuery?: (val: string) => void;
   onOpenLoginModal?: () => void;
@@ -229,20 +230,18 @@ export interface HeaderProps {
 }
 
 export default function Header({
+  loginPageProps,
   searchQuery,
   setSearchQuery,
-  onOpenLoginModal,
-  onOpenAuthModal,
-  onOpenBusinessModal,
-  onOpenPostModal,
   isSidebarCollapsed = false,
+  setIsSidebarCollapsed,
+  isMobileOpen = false,
+  setIsMobileOpen,
   onToggleSidebar,
   onSelectSearchCategory,
   onClearSearch,
-  user,
-  onLogout,
 }: HeaderProps) {
-  const router = useRouter();
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [localQuery, setLocalQuery] = useState('');
   const query = searchQuery ?? localQuery;
@@ -252,17 +251,28 @@ export default function Header({
     setSearchQuery?.(value);
   };
   const searchContainerRef = useRef<HTMLDivElement>(null);
-  const businessMenuRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [isBusinessMenuOpen, setIsBusinessMenuOpen] = useState(false);
+
+  const handleToggleSidebar = () => {
+    if (onToggleSidebar) {
+      onToggleSidebar();
+    } else if (setIsSidebarCollapsed) {
+      setIsSidebarCollapsed(!isSidebarCollapsed);
+    }
+  };
+
+  const handleToggleMobile = () => {
+    if (setIsMobileOpen) {
+      setIsMobileOpen(!isMobileOpen);
+    } else if (onToggleSidebar) {
+      onToggleSidebar();
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
         setIsSearchFocused(false);
-      }
-      if (businessMenuRef.current && !businessMenuRef.current.contains(event.target as Node)) {
-        setIsBusinessMenuOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -286,13 +296,13 @@ export default function Header({
   return (
     <div className="sticky top-0 z-30">
       <header className="h-[58px] rounded-t-[14px] border-b border-slate-100 bg-white px-4 sm:px-6 md:px-8">
-        <div className="w-full h-full flex items-center justify-between gap-2 sm:gap-4">
+        <div className="relative w-full h-full flex items-center justify-between gap-2 sm:gap-4">
         {/* Left section: Controls */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 z-10">
           {/* Mobile menu & logo */}
           <div className="flex items-center gap-2 md:hidden">
             <button
-              onClick={onToggleSidebar}
+              onClick={handleToggleMobile}
               type="button"
               aria-label="Toggle navigation"
               className={`rounded-lg p-1.5 text-[#777777] hover:bg-slate-100 ${FOCUS}`}
@@ -302,23 +312,26 @@ export default function Header({
             <UnstopLogo />
           </div>
 
-          {isSidebarCollapsed && (
-            <button
-              onClick={onToggleSidebar}
-              type="button"
-              title="Expand sidebar"
-              aria-label="Expand sidebar"
-              className={`hidden h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#888888] transition-colors hover:bg-slate-100 hover:text-[#444444] md:flex ${FOCUS}`}
-            >
+          {/* Toggle sidebar button: minimize and open on click */}
+          <button
+            onClick={handleToggleSidebar}
+            type="button"
+            title={isSidebarCollapsed ? "Open sidebar" : "Minimize sidebar"}
+            aria-label={isSidebarCollapsed ? "Open sidebar" : "Minimize sidebar"}
+            className={`hidden h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#888888] transition-colors hover:bg-slate-100 hover:text-[#444444] md:flex ${FOCUS}`}
+          >
+            {isSidebarCollapsed ? (
               <ChevronsRight aria-hidden="true" className="h-[18px] w-[18px]" />
-            </button>
-          )}
+            ) : (
+              <ChevronsLeft aria-hidden="true" className="h-[18px] w-[18px]" />
+            )}
+          </button>
         </div>
 
         {/* Center search field matching user screenshot */}
         <div
           ref={searchContainerRef}
-          className="flex-1 max-w-[460px] mx-2 sm:mx-auto"
+          className="sm:absolute sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 flex-1 sm:flex-initial w-auto sm:w-[320px] md:w-[340px] mx-2 sm:mx-0 z-20"
           onKeyDown={(event) => {
             if (event.key === 'Escape') {
               handleClear(event);
@@ -327,13 +340,13 @@ export default function Header({
           }}
         >
           <div
-            className={`flex h-[42px] w-full items-center rounded-full bg-white transition-all ${
+            className={`flex h-[36px] w-full items-center rounded-full bg-white transition-all ${
               isSearchFocused
-                ? 'border-2 border-[#0073e6]'
+                ? 'border border-[#0073e6] shadow-[0_0_0_1.5px_#0073e6]'
                 : 'border border-[#d0d5dd] hover:border-[#98a2b3]'
             }`}
           >
-            <Search aria-hidden="true" strokeWidth={2.4} className="ml-3.5 h-[17px] w-[17px] shrink-0 text-[#2d3748]" />
+            <Search aria-hidden="true" strokeWidth={2.2} className="ml-3 h-[15px] w-[15px] shrink-0 text-[#2d3748]" />
             <input
               ref={inputRef}
               type="text"
@@ -346,7 +359,7 @@ export default function Header({
               onChange={(event) => updateQuery(event.target.value)}
               onFocus={() => setIsSearchFocused(true)}
               onClick={() => setIsSearchFocused(true)}
-              className="h-full min-w-0 flex-1 rounded-full border-0 bg-transparent pl-2.5 pr-3 text-[14.5px] font-normal text-[#1e293b] outline-none placeholder:text-[#8c9ba5] focus:ring-0"
+              className="h-full min-w-0 flex-1 rounded-full border-0 bg-transparent pl-2 pr-2.5 text-[13.5px] font-normal text-[#1e293b] outline-none placeholder:text-[#8fa8c6] focus:ring-0"
             />
             {query && (
               <button
@@ -354,9 +367,9 @@ export default function Header({
                 onClick={handleClear}
                 title="Clear search"
                 aria-label="Clear search"
-                className={`mr-2.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 ${FOCUS}`}
+                className={`mr-2 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 ${FOCUS}`}
               >
-                <X aria-hidden="true" className="h-3 w-3" />
+                <X aria-hidden="true" className="h-2.5 w-2.5" />
               </button>
             )}
           </div>
@@ -370,94 +383,48 @@ export default function Header({
         </div>
 
         {/* Right Actions */}
-        <div className="flex shrink-0 items-center justify-end gap-2.5">
-          {/* For Business with Popover Menu */}
-          <div ref={businessMenuRef} className="relative hidden sm:block">
-            <button
-              type="button"
-              onClick={() => setIsBusinessMenuOpen(!isBusinessMenuOpen)}
-              onMouseEnter={() => setIsBusinessMenuOpen(true)}
-              className={`h-[36px] shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-[#80baff] bg-[#deedfc] px-3.5 text-[13px] font-normal text-[#1c4980] transition-colors hover:bg-[#cfe5fc] flex cursor-pointer ${FOCUS}`}
+        <div className="flex shrink-0 items-center justify-end gap-2.5 z-10">
+          {/* For Business */}
+          <div className="relative hidden sm:block">
+            <a
+              href="/for-business"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex h-[36px] shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-[#80baff] bg-[#deedfc] px-3.5 text-[13px] font-normal text-[#1c4980] transition-colors hover:bg-[#cfe5fc] cursor-pointer ${FOCUS}`}
             >
               <BusinessIcon />
               <span>For <span className="font-semibold">Business</span></span>
-            </button>
-
-            {/* Business Feature Preview Popover */}
-            {isBusinessMenuOpen && (
-              <div
-                onMouseLeave={() => setIsBusinessMenuOpen(false)}
-                className="absolute right-0 top-full mt-2 w-[340px] rounded-2xl bg-white p-4 shadow-2xl border border-slate-200 z-50 animate-fadeIn"
-              >
-                <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#0073e6] animate-pulse" />
-                    <span className="text-xs font-bold text-[#1c4980]">Unstop for Business</span>
-                  </div>
-                  <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                    AI Agentic Suite
-                  </span>
-                </div>
-
-                <p className="text-xs font-bold text-slate-800 leading-snug">
-                  AI-Powered Hiring Platform &amp; Recruitment Software
-                </p>
-                <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
-                  Streamline sourcing to selection with 7 autonomous recruiting agents &amp; 32M+ verified profiles.
-                </p>
-
-                {/* Agent chips */}
-                <div className="flex flex-wrap gap-1.5 my-3">
-                  {['AI Sourcing', 'AI Screening', 'AI Calling', 'AI Assessment', 'AI Interview'].map((agent, i) => (
-                    <span key={i} className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 font-medium text-slate-700">
-                      {agent}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsBusinessMenuOpen(false);
-                      const el = document.getElementById('unstop-business');
-                      if (el) {
-                        el.scrollIntoView({ behavior: 'smooth' });
-                      } else {
-                        router.push('/business');
-                      }
-                    }}
-                    className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl bg-[#0073e6] hover:bg-[#005fb8] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
-                  >
-                    <span>⚡ View AI Hiring Section</span>
-                  </button>
-
-                  <Link
-                    href="/business"
-                    onClick={() => setIsBusinessMenuOpen(false)}
-                    className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200 transition-colors text-center"
-                  >
-                    <span>Open Business Portal (/business)</span>
-                    <span className="text-[10px]">↗</span>
-                  </Link>
-                </div>
-              </div>
-            )}
+            </a>
           </div>
 
-          <a
-            href="/login"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            aria-haspopup="dialog"
+            aria-expanded={isLoginOpen}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              setIsSearchFocused(false);
+              setIsLoginOpen(true);
+            }}
             className={`flex h-[36px] shrink-0 items-center justify-center gap-1.5 rounded-full bg-[#0073e6] px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#0062c4] ${FOCUS}`}
           >
             <LogIn aria-hidden="true" strokeWidth={2.2} className="h-4 w-4" />
             <span>Login</span>
-          </a>
+          </button>
         </div>
         </div>
       </header>
+      {isLoginOpen && (
+        <LoginPage
+          {...loginPageProps}
+          onClose={() => setIsLoginOpen(false)}
+          onSuccess={(loginUser) => {
+            setIsLoginOpen(false);
+            loginPageProps?.onSuccess?.(loginUser);
+          }}
+        />
+      )}
     </div>
   );
 }

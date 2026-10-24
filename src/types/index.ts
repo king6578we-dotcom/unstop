@@ -23,7 +23,22 @@ export interface FeaturedItem {
   title: string;
   subtitle?: string;
   headline?: string;
-  bannerType: 'nykaa' | 'coursera' | 'maruti' | 'reliance-tup' | 'retro-game' | 'magucho' | 'snapdragon' | 'google' | 'flipkart';
+  bannerType:
+    | 'nykaa'
+    | 'coursera'
+    | 'maruti'
+    | 'reliance-tup'
+    | 'retro-game'
+    | 'magucho'
+    | 'snapdragon'
+    | 'google'
+    | 'flipkart'
+    | 'asian-paints'
+    | 'hp-power-lab'
+    | 'eurogrip-torq'
+    | 'iit-future'
+    | 'infosys'
+    | (string & {});
   badgeTag?: string;
   hasHeart?: boolean;
   tags: string[];

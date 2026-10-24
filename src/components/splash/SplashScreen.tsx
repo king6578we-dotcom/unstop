@@ -23,6 +23,21 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   const [isMounted, setIsMounted] = useState(true);
   const [dots, setDots] = useState('');
 
+  // Skip splash immediately if requested
+  useEffect(() => {
+    try {
+      if (
+        sessionStorage.getItem('skipSplash') === 'true' ||
+        (typeof window !== 'undefined' && window.location.search.includes('nosplash=true'))
+      ) {
+        setIsMounted(false);
+        onFinish?.();
+      }
+    } catch {
+      // ignore
+    }
+  }, [onFinish]);
+
   // Subtle animated dots for "Please Wait"
   useEffect(() => {
     const dotInterval = setInterval(() => {
@@ -70,18 +85,18 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
       {/* Center Content: Exact Logo + Please Wait */}
       <div className="flex flex-col items-center justify-center text-center">
         {/* Unstop Official Logo */}
-        <div className="transform transition-transform duration-700 hover:scale-105">
+        <div className="transform transition-transform duration-500 hover:scale-105">
           <UnstopLogo
             variant="full"
-            className="h-10 sm:h-12 w-auto max-w-[200px]"
+            className="h-9 sm:h-10 md:h-11 w-auto max-w-[150px] sm:max-w-[175px]"
             color="#1C4980"
           />
         </div>
 
         {/* Loading text with animated ellipsis */}
-        <div className="mt-5 flex items-center justify-center h-6">
-          <p className="text-[#334155] text-[15px] font-normal tracking-wide">
-            Please Wait<span className="inline-block w-4 text-left font-semibold">{dots}</span>
+        <div className="mt-3 sm:mt-4 flex items-center justify-center h-6">
+          <p className="text-[#475569] text-sm sm:text-[15.5px] font-normal tracking-wide">
+            Please Wait<span className="inline-block w-4 text-left font-medium">{dots}</span>
           </p>
         </div>
       </div>

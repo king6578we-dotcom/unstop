@@ -102,6 +102,90 @@ export const CATEGORIES: CategoryItem[] = [
 
 export const FEATURED_ITEMS: FeaturedItem[] = [
   {
+    id: 'featured-alchemy',
+    title: 'Asian Paints Alchemy 2026',
+    headline: 'Elevate Your Career with Scientific Excellence',
+    subtitle: 'PhD Sponsorships, Cash Rewards & Internship Opportunities in offer',
+    bannerType: 'asian-paints',
+    tags: ['Online', 'Free'],
+    hasHeart: true,
+    companyName: 'Asian Paints',
+    stipendOrPrize: 'PhD Sponsorships + Cash Rewards & Internship Opportunities',
+    location: 'Online',
+    deadline: 'Registration Open',
+    impressions: '380K Impressions',
+    description: 'Elevate your research career with Asian Paints Alchemy 2026. Explore scientific excellence, receive PhD sponsorships, and compete for exclusive pre-placement internship offers.',
+    eligibility: 'Open to Postgraduates, PhD scholars, and Chemistry/Polymer/Materials science students',
+    perks: [
+      'Comprehensive PhD sponsorships & corporate research funding',
+      'Direct PPI/PPO opportunities with Asian Paints R&D Center',
+      'Cash awards and national research recognition'
+    ]
+  },
+  {
+    id: 'featured-hp',
+    title: 'HP Power Lab 3.0',
+    headline: 'Your perspective. Our next possibility.',
+    subtitle: 'Power your future with Hindustan Petroleum Corporation Limited',
+    bannerType: 'hp-power-lab',
+    tags: ['Online', 'Free'],
+    hasHeart: true,
+    companyName: 'HPCL (Hindustan Petroleum)',
+    stipendOrPrize: '₹4,50,000 Cash Prizes + Pre-Placement Interviews',
+    location: 'Online',
+    deadline: 'Registration Open',
+    impressions: '420K Impressions',
+    description: 'Bring your engineering and business perspective to solve real-world energy, green transition, and refining challenges with HPCL senior technical leaders.',
+    eligibility: 'Pre-final & Final year engineering and management students nationwide',
+    perks: [
+      'Pre-Placement Interviews (PPIs) for Management & Executive Trainees',
+      'All-expenses paid grand finale at HPCL Corporate Headquarters',
+      'Exclusive interaction with PSU industry stalwarts'
+    ]
+  },
+  {
+    id: 'featured-torq',
+    title: 'Eurogrip TORQ 4.0 and Creator Challenge',
+    headline: 'Write a great case study. Make a case for your career!',
+    subtitle: 'Win up to ₹3 Lakhs + PPIs with the Case Study Competition.',
+    bannerType: 'eurogrip-torq',
+    tags: ['Free'],
+    hasHeart: true,
+    companyName: 'Eurogrip Tyres',
+    stipendOrPrize: '₹3,00,000 Cash + PPIs + ₹1 Lakh Amazon Vouchers',
+    location: 'Online / Case Study',
+    deadline: 'Closing Soon',
+    impressions: '290K Impressions',
+    description: 'Take the action further with a Treasure Hunt and fun social challenges. Win up to ₹3 Lakhs + PPIs with the Case Study Competition, and 150 Amazon vouchers worth ₹1 Lakh.',
+    eligibility: 'Open to all undergraduate & postgraduate students across India',
+    perks: [
+      'Win up to ₹3,00,000 Cash + PPIs with Case Study Competition',
+      '150 Amazon vouchers worth ₹1 Lakh through fun social challenges',
+      'National recognition from Eurogrip Tyres leadership'
+    ]
+  },
+  {
+    id: 'featured-iit',
+    title: 'Dream to be an IITian?',
+    headline: 'Build Your Future with Two Leading Institutions.',
+    subtitle: 'IIT Ranchi in association with IIT Patna - Regular Degree in Hybrid Mode',
+    bannerType: 'iit-future',
+    tags: ['Register Now!'],
+    hasHeart: false,
+    companyName: 'IIT Ranchi & IIT Patna',
+    stipendOrPrize: 'Full-Time MBA, MCA & M.Tech Degrees',
+    location: 'Hybrid / Ranchi & Patna',
+    deadline: 'Spring Intake 2026-27',
+    impressions: '560K Impressions',
+    description: 'Build your future with two leading institutions: IIT Ranchi in association with IIT Patna. Regular (Full-Time) Degree Programmes in Hybrid Mode: MBA, MCA in Dual Specialisation, and M.Tech in AI & DSE.',
+    eligibility: 'Working professionals, aspiring graduates, and tech/management students',
+    perks: [
+      'Campus Immersion at premier IIT campuses',
+      '100% Internship & Placement Support',
+      'Flexible No-Cost EMI financing options'
+    ]
+  },
+  {
     id: 'featured-nykaa',
     title: 'Be the face of Nykaa',
     headline: 'THE NEXT FACE OF NYKAA',
@@ -183,48 +267,6 @@ export const FEATURED_ITEMS: FeaturedItem[] = [
       '₹10,00,000 cash prizes and seed incubation opportunities',
       '1-on-1 mentorship with Reliance senior executives',
       'Fast-track placement interviews with Reliance ventures'
-    ]
-  },
-  {
-    id: 'featured-5',
-    title: 'Google Cloud GenAI Hackathon 2026',
-    headline: 'Build with Gemini 2.5 & Vertex AI',
-    subtitle: 'Solve real-world enterprise bottlenecks with multimodal agentic AI.',
-    bannerType: 'google',
-    badgeTag: 'Submit Project',
-    tags: ['Hackathon', 'Free', 'Cloud Credits'],
-    companyName: 'Google Cloud',
-    stipendOrPrize: '$25,000 in GCP Credits & Swag',
-    location: 'Global / Virtual',
-    deadline: '14 days left',
-    impressions: '310K Impressions',
-    description: 'Create multimodal enterprise agents, automated code copilots, or smart reasoning workflows with Google Cloud Vertex AI and Gemini APIs.',
-    eligibility: 'Developers, students, AI researchers, and startups worldwide',
-    perks: [
-      '$500 Cloud Credits for all shortlisted teams',
-      'Google Developer Certification vouchers',
-      'Global stage feature on Google Cloud Blog'
-    ]
-  },
-  {
-    id: 'featured-6',
-    title: 'Flipkart GRiD 6.0 Robotics Challenge',
-    headline: 'Next-Gen Autonomous Warehouse Systems',
-    subtitle: 'India’s biggest tech campus challenge with live robotics testing.',
-    bannerType: 'flipkart',
-    badgeTag: 'Explore Track',
-    tags: ['Robotics', 'Tier 1 & 2', 'PPO'],
-    companyName: 'Flipkart',
-    stipendOrPrize: '₹12,00,000 + SDE Roles',
-    location: 'Bengaluru / Hybrid',
-    deadline: '18 days left',
-    impressions: '180K Impressions',
-    description: 'Tackle high-scale autonomous mobile robotics (AMRs), automated package sorting, and dynamic delivery routing algorithms.',
-    eligibility: 'B.Tech / B.E. / M.Tech / Dual Degree students graduating 2026/2027',
-    perks: [
-      'Full-time software engineering and robotics job offers',
-      'Hands-on sandbox with real industrial warehouse robotics',
-      'Trophy and winner medals'
     ]
   }
 ];

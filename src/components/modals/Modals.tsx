@@ -35,213 +35,298 @@ export interface AuthModalProps {
   onLoginSuccess: (user: { name: string; email: string }) => void;
 }
 
+const MODAL_CANDIDATE_BANNERS = [
+  {
+    id: 'practice',
+    alt: 'Unstop Practice easy to complex problems',
+    src: '/images/unstop-login-practice-panel.png',
+  },
+  {
+    id: 'mentorship',
+    alt: 'Unstop Mentorship from top mentors',
+    src: '/images/unstop-login-mentorship-panel.png',
+  },
+  {
+    id: 'compete',
+    alt: 'Unstop Compete in 130k+ opportunities',
+    src: '/images/unstop-login-compete-panel.png',
+  },
+];
+
+const MODAL_EMPLOYER_BANNERS = [
+  {
+    id: 'host',
+    alt: 'Unstop Host jobs and internships for free',
+    src: '/images/unstop-employer-host-panel.png',
+  },
+  {
+    id: 'assessments',
+    alt: 'Unstop Assessments with advance proctoring features',
+    src: '/images/unstop-employer-assessments-panel.png',
+  },
+];
+
 export const AuthModal: React.FC<AuthModalProps> = ({
   isOpen,
   onClose,
   onLoginSuccess,
 }) => {
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [userRole, setUserRole] = useState<'candidate' | 'employer'>('candidate');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [loginMethod, setLoginMethod] = useState<'otp' | 'password'>('otp');
+  const [activeBannerIndex, setActiveBannerIndex] = useState(0);
+
+  const banners = userRole === 'employer' ? MODAL_EMPLOYER_BANNERS : MODAL_CANDIDATE_BANNERS;
+
+  React.useEffect(() => {
+    setActiveBannerIndex(0);
+  }, [userRole]);
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const interval = setInterval(() => {
+      setActiveBannerIndex((prev) => (prev + 1) % banners.length);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [isOpen, banners.length]);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    if (!email) return;
 
-    if (!email || !password || (isSignUp && !name)) {
-      setError('Please fill in all required fields');
-      return;
-    }
-
-    if (!email.includes('@') || !email.includes('.')) {
-      setError('Please provide a valid email address');
-      return;
-    }
-
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
-      return;
-    }
-
-    // Success
     onLoginSuccess({
-      name: isSignUp ? name : email.split('@')[0],
+      name: email.split('@')[0] || 'User',
       email,
     });
     onClose();
   };
 
-  const handleDemoSignIn = (role: 'Student' | 'Recruiter') => {
+  const handleSocialClick = (provider: string) => {
+    const mockEmail = `user@${provider.toLowerCase()}.com`;
     onLoginSuccess({
-      name: role === 'Student' ? 'Aditya Verma' : 'Neha Kapur (Recruiter)',
-      email: role === 'Student' ? 'aditya@example.com' : 'neha@company.com',
+      name: provider + ' User',
+      email: mockEmail,
     });
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white/95 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6 md:p-10 lg:p-14 bg-black/40 backdrop-blur-xs animate-in fade-in duration-200">
       {/* Background decoration (dots and nodes) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40">
         <div className="absolute top-10 left-10 w-[300px] h-[300px] rounded-full border border-slate-200 border-dashed" />
         <div className="absolute top-40 right-20 w-[400px] h-[400px] rounded-full border border-slate-200 border-dashed" />
         <div className="absolute bottom-10 left-1/4 w-[250px] h-[250px] rounded-full border border-slate-200 border-dashed" />
-        {/* Placeholder nodes */}
-        <div className="absolute top-20 right-1/4 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-[10px]">un</div>
-        <div className="absolute bottom-20 left-10 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-[10px]">un</div>
+        <div className="absolute top-20 right-1/4 w-8 h-8 bg-[#1c4980] text-white rounded-full flex items-center justify-center font-bold text-[10px]">un</div>
+        <div className="absolute bottom-20 left-10 w-8 h-8 bg-[#1c4980] text-white rounded-full flex items-center justify-center font-bold text-[10px]">un</div>
       </div>
 
-      <div className="relative w-full max-w-[850px] bg-white rounded-3xl shadow-[0_0_60px_-15px_rgba(0,0,0,0.1)] border border-slate-100 flex overflow-hidden min-h-[550px]">
+      <div className="relative w-full max-w-[710px] bg-white rounded-[20px] shadow-[0_20px_50px_-10px_rgba(15,23,42,0.18)] border border-[#edf0f4] flex overflow-hidden p-[6px] sm:p-[8px] md:h-[480px]">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer z-10"
+          className="absolute top-3.5 right-3.5 p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer z-20"
+          aria-label="Close dialog"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
-        {/* LEFT COLUMN: Yellow Branding */}
-        <div className="w-[45%] bg-[#ffc107] p-8 flex flex-col relative hidden md:flex rounded-l-3xl rounded-r-[40px] m-1.5 overflow-hidden">
-          {/* Logo */}
-          <div className="z-10">
-            <span className="text-[26px] font-black text-[#1c4980] flex items-center tracking-tight">
-              unstop<span className="w-2.5 h-2.5 rounded-full bg-[#0073e6] ml-0.5 mt-2"></span>
-            </span>
-          </div>
-          
-          {/* Decorative badges (recreated from screenshot) */}
-          <div className="flex-1 flex flex-col items-center justify-center relative mt-4">
-            {/* Using a placeholder for the person to match the layout intent */}
-            <div className="relative w-full h-[280px] flex items-end justify-center">
-               <div className="absolute inset-0 bg-gradient-to-t from-white/90 to-transparent bottom-0 rounded-t-3xl" />
-               <div className="absolute top-4 right-2 bg-white/90 backdrop-blur-sm p-2 rounded-xl shadow-sm text-center transform rotate-3">
-                 <div className="w-6 h-6 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-1">
-                   <div className="w-3 h-3 bg-[#0073e6] rounded-full" />
-                 </div>
-                 <span className="block text-[10px] font-bold text-slate-800 leading-tight">5-Day<br/>Interview Prep</span>
-               </div>
-               <div className="absolute top-16 right-16 bg-white/90 backdrop-blur-sm p-2 rounded-xl shadow-sm text-center transform -rotate-3">
-                 <div className="w-6 h-6 mx-auto bg-purple-100 rounded-full flex items-center justify-center mb-1">
-                   <div className="w-3 h-3 bg-purple-600 rounded-full" />
-                 </div>
-                 <span className="block text-[10px] font-bold text-slate-800 leading-tight">Mock<br/>Interviews</span>
-               </div>
-               <div className="absolute bottom-12 right-0 bg-white/90 backdrop-blur-sm p-2.5 rounded-xl shadow-sm text-center">
-                 <div className="w-6 h-6 mx-auto bg-indigo-100 rounded-full flex items-center justify-center mb-1">
-                   <div className="w-3 h-3 bg-indigo-600 rounded-full" />
-                 </div>
-                 <span className="block text-[10px] font-bold text-slate-800 leading-tight">100-Day<br/>Coding Sprint</span>
-               </div>
-               
-               {/* Practice Text inside the white container */}
-               <div className="relative z-10 w-[85%] bg-white p-4 rounded-2xl shadow-sm text-center mb-4">
-                 <h3 className="text-xl font-bold text-[#1c4980]">Practice</h3>
-                 <p className="text-sm text-slate-600 font-medium">easy to complex problems</p>
-               </div>
-            </div>
+        {/* LEFT COLUMN: Branding Banner (Candidate: Yellow, Employer: Blue) */}
+        <div
+          className={`w-[270px] shrink-0 relative hidden md:block rounded-l-[15px] rounded-r-[32px] overflow-hidden select-none transition-colors duration-300 ${
+            userRole === 'employer' ? 'bg-[#092955]' : 'bg-[#ffc700]'
+          }`}
+        >
+          {banners.map((b, idx) => (
+            <img
+              key={b.id}
+              src={b.src}
+              alt={b.alt}
+              className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-500 ease-in-out ${
+                idx === activeBannerIndex ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none'
+              }`}
+            />
+          ))}
+
+          {/* Dots */}
+          <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-black/25 px-2 py-0.5">
+            {banners.map((b, idx) => (
+              <button
+                key={b.id}
+                type="button"
+                onClick={() => setActiveBannerIndex(idx)}
+                className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                  idx === activeBannerIndex ? 'w-4 bg-white' : 'w-1.5 bg-white/50'
+                }`}
+              />
+            ))}
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Login Form */}
-        <div className="w-full md:w-[55%] p-8 sm:p-10 flex flex-col justify-center">
-          <h2 className="text-2xl font-bold text-slate-800 tracking-tight">Your Next Opportunity Starts Here</h2>
-          <p className="text-[13px] text-slate-500 mt-1.5 mb-6 font-medium">
-            Log in to discover competitions, jobs, and internships built for you.
-          </p>
+        {/* RIGHT COLUMN: Login Form (Proportionally Scaled) */}
+        <div className="flex-1 px-5 py-3 sm:px-5.5 sm:py-3.5 flex flex-col justify-between min-w-0 overflow-y-auto [scrollbar-width:thin] [scrollbar-color:#cfd5dd_transparent]">
+          <div>
+            <h2 className="text-[17px] sm:text-[18px] font-bold text-[#1a202c] tracking-[-0.3px] leading-tight">
+              {userRole === 'employer'
+                ? 'Hire the Best Campus Talent'
+                : 'Your Next Opportunity Starts Here'}
+            </h2>
+            <p className="text-[11px] text-[#64748b] mt-0.5 leading-relaxed">
+              {userRole === 'employer'
+                ? 'Log in to manage campaigns, events, and hiring pipeline.'
+                : 'Log in to discover competitions, jobs, and internships.'}
+            </p>
 
-          {/* Toggle Candidate/Employer */}
-          <div className="flex bg-[#f3f4f6] rounded-xl p-1 mb-6">
-            <button
-              type="button"
-              className="flex-1 py-2 text-[13px] font-bold text-[#0073e6] bg-white rounded-lg shadow-sm transition-all"
-            >
-              I'm a Candidate
-            </button>
-            <button
-              type="button"
-              className="flex-1 py-2 text-[13px] font-medium text-slate-500 hover:text-slate-700 transition-all"
-            >
-              I'm an Employer
-            </button>
-          </div>
-
-          {/* Social Logins */}
-          <div className="space-y-3 mb-6">
-            <button className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-full border border-slate-200 hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-              </svg>
-              Continue with Google
-            </button>
-            
-            <button className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-full border border-slate-200 hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.924 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" fill="#0077B5"/>
-              </svg>
-              Continue with LinkedIn
-            </button>
-
-            <button className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-full border border-slate-200 hover:bg-slate-50 transition-colors text-sm font-medium text-slate-700">
-              <svg width="18" height="18" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="1" y="1" width="9" height="9" fill="#F25022"/>
-                <rect x="11" y="1" width="9" height="9" fill="#7FBA00"/>
-                <rect x="1" y="11" width="9" height="9" fill="#00A4EF"/>
-                <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
-              </svg>
-              Continue with Microsoft
-            </button>
-          </div>
-
-          {/* Divider */}
-          <div className="flex items-center gap-3 mb-6">
-            <div className="flex-1 h-px bg-slate-100"></div>
-            <span className="text-[11px] font-medium text-slate-400">OR</span>
-            <div className="flex-1 h-px bg-slate-100"></div>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-[13px] font-medium text-slate-700 mb-1.5">
-                Email <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter Email"
-                className="w-full h-11 px-4 rounded-xl border border-slate-200 text-sm focus:border-[#0073e6] focus:ring-2 focus:ring-blue-100 outline-none"
-              />
-              <div className="text-right mt-1.5">
-                <button type="button" className="text-[12px] font-bold text-[#0073e6] hover:underline cursor-pointer">
-                  Login via Password
-                </button>
-              </div>
+            {/* Toggle Candidate/Employer */}
+            <div className="mt-2.5 flex h-[32px] sm:h-[34px] items-center rounded-xl border border-[#e5e7eb] bg-[#f3f4f6] p-[2px]">
+              <button
+                type="button"
+                onClick={() => setUserRole('candidate')}
+                className={`h-full flex-1 rounded-[8px] text-[11px] sm:text-[11.5px] transition ${
+                  userRole === 'candidate'
+                    ? 'font-semibold text-[#0066f5] bg-white shadow-xs'
+                    : 'font-medium text-[#4b5563] hover:text-[#111]'
+                }`}
+              >
+                I&apos;m a Candidate
+              </button>
+              <button
+                type="button"
+                onClick={() => setUserRole('employer')}
+                className={`h-full flex-1 rounded-[8px] text-[11px] sm:text-[11.5px] transition ${
+                  userRole === 'employer'
+                    ? 'font-semibold text-[#0066f5] bg-white shadow-xs'
+                    : 'font-medium text-[#4b5563] hover:text-[#111]'
+                }`}
+              >
+                I&apos;m an Employer
+              </button>
             </div>
 
-            <button
-              type="submit"
-              className={`w-full py-3 rounded-xl text-sm font-bold transition-all ${
-                email 
-                  ? 'bg-[#0073e6] hover:bg-[#005bb5] text-white shadow-md active:scale-99 cursor-pointer' 
-                  : 'bg-slate-100 text-slate-400 cursor-not-allowed'
-              }`}
-            >
-              Continue with OTP
-            </button>
-          </form>
+            {/* Social Logins */}
+            <div className="mt-2 space-y-1.5">
+              <button
+                type="button"
+                onClick={() => handleSocialClick('Google')}
+                className="relative flex h-[32px] sm:h-[33px] w-full items-center justify-center rounded-full border border-[#e5e7eb] bg-white text-[11px] sm:text-[11.5px] font-medium text-[#374151] transition hover:bg-slate-50 cursor-pointer"
+              >
+                <span className="absolute left-[13px] grid h-4 w-4 place-items-center">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                  </svg>
+                </span>
+                Continue with Google
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => handleSocialClick('LinkedIn')}
+                className="relative flex h-[32px] sm:h-[33px] w-full items-center justify-center rounded-full border border-[#e5e7eb] bg-white text-[11px] sm:text-[11.5px] font-medium text-[#374151] transition hover:bg-slate-50 cursor-pointer"
+              >
+                <span className="absolute left-[13px] flex h-[15px] w-[15px] items-center justify-center rounded-[2px] bg-[#0a66c2] text-[9.5px] font-bold leading-none text-white">
+                  in
+                </span>
+                Continue with LinkedIn
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSocialClick('Microsoft')}
+                className="relative flex h-[32px] sm:h-[33px] w-full items-center justify-center rounded-full border border-[#e5e7eb] bg-white text-[11px] sm:text-[11.5px] font-medium text-[#374151] transition hover:bg-slate-50 cursor-pointer"
+              >
+                <span className="absolute left-[13px] grid h-[13px] w-[13px] grid-cols-2 gap-[1.5px]">
+                  <span className="bg-[#f25022]" />
+                  <span className="bg-[#7fba00]" />
+                  <span className="bg-[#00a4ef]" />
+                  <span className="bg-[#ffb900]" />
+                </span>
+                Continue with Microsoft
+              </button>
+            </div>
+
+            {/* Divider */}
+            <div className="my-1.5 flex items-center gap-2 text-[9.5px] font-medium text-[#9ca3af]">
+              <div className="flex-1 h-px bg-[#e5e7eb]" />
+              <span>OR</span>
+              <div className="flex-1 h-px bg-[#e5e7eb]" />
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit}>
+              <div>
+                <div className="mb-0.5 flex items-center justify-between">
+                  <label className="block text-[10.5px] font-medium text-[#374151]">
+                    Email <span className="text-[#e74c3c]">*</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setLoginMethod(m => m === 'otp' ? 'password' : 'otp')}
+                    className="text-[10px] font-medium text-[#0066f5] hover:underline cursor-pointer"
+                  >
+                    {loginMethod === 'otp' ? 'Login via Password' : 'Login via OTP'}
+                  </button>
+                </div>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter Email"
+                  className="h-[32px] sm:h-[33px] w-full rounded-xl border border-[#e5e7eb] bg-white px-3 text-[11.5px] text-[#1f2937] outline-none transition placeholder:text-[#9ca3af] focus:border-[#0066f5] focus:ring-1 focus:ring-[#0066f5]"
+                />
+
+                {loginMethod === 'password' && (
+                  <div className="mt-1.5">
+                    <label className="mb-0.5 block text-[10.5px] font-medium text-[#374151]">
+                      Password <span className="text-[#e74c3c]">*</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Enter Password"
+                        className="h-[32px] sm:h-[33px] w-full rounded-xl border border-[#e5e7eb] bg-white px-3 pr-8 text-[11.5px] outline-none transition placeholder:text-[#9ca3af] focus:border-[#0066f5] focus:ring-1 focus:ring-[#0066f5]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(v => !v)}
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#9ca3af] hover:text-[#4b5563] cursor-pointer"
+                      >
+                        {showPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={!email}
+                className="mt-2 flex h-[32px] sm:h-[34px] w-full items-center justify-center rounded-xl bg-[#0066f5] text-[11.5px] font-semibold text-white transition hover:bg-[#0057d4] disabled:bg-[#f3f4f6] disabled:text-[#9ca3af] disabled:cursor-not-allowed cursor-pointer"
+              >
+                {loginMethod === 'otp' ? 'Continue with OTP' : 'Log In'}
+              </button>
+            </form>
+          </div>
 
           {/* Footer Terms */}
-          <p className="text-[11px] text-center text-slate-500 mt-6 max-w-xs mx-auto leading-relaxed">
-            By signing in, you accept the <a href="#" className="text-[#0073e6] hover:underline">Terms of Service</a> and acknowledge our <a href="#" className="text-[#0073e6] hover:underline">Privacy Policy</a>.
+          <p className="mt-1.5 text-center text-[9.5px] leading-tight text-[#6b7280]">
+            By signing in, you accept the{' '}
+            <a href="/terms" className="text-[#0066f5] hover:underline">
+              Terms of Service
+            </a>{' '}
+            and acknowledge our{' '}
+            <a href="/privacy" className="text-[#0066f5] hover:underline">
+              Privacy Policy
+            </a>
+            .
           </p>
         </div>
       </div>
@@ -291,7 +376,7 @@ export const OpportunityDetailModal: React.FC<OpportunityDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in duration-200">
       <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
         {/* Header with sticky close button */}
         <div className="sticky top-0 bg-white/95 backdrop-blur-xs px-6 py-4 border-b border-slate-100 flex items-center justify-between z-10">
@@ -494,7 +579,7 @@ export const PostJobModal: React.FC<PostJobModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-200">
       <div className="relative w-full max-w-[520px] bg-white rounded-3xl shadow-2xl border border-slate-100 p-6 sm:p-7 max-h-[90vh] overflow-y-auto">
         {/* HEADER */}
         <div className="flex items-center gap-3.5 pb-2">

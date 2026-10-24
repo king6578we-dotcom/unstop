@@ -2,74 +2,56 @@
 
 import React from 'react';
 
-interface MetricItem {
-  label: string;
-  number: string;
-  unit: string;
-}
-
-const METRICS: MetricItem[] = [
-  {
-    label: 'Assessments',
-    number: '22.3',
-    unit: 'M+',
-  },
-  {
-    label: 'Opportunities',
-    number: '140',
-    unit: 'K+',
-  },
-  {
-    label: 'Organisations',
-    number: '42',
-    unit: 'K+',
-  },
-  {
-    label: 'Brands trust us',
-    number: '800',
-    unit: '+',
-  },
-  {
-    label: 'Countries',
-    number: '78',
-    unit: '+',
-  },
+const stats = [
+  { label: 'Assessments', number: '22.3', suffix: 'M+' },
+  { label: 'Opportunities', number: '140', suffix: 'K+' },
+  { label: 'Organisations', number: '42', suffix: 'K+' },
+  { label: 'Brands trust us', number: '800', suffix: '+' },
+  { label: 'Countries', number: '78', suffix: '+' },
 ];
 
 export const PlatformStatsSection: React.FC = () => {
   return (
-    <section className="py-10 sm:py-14 select-none w-full flex flex-col items-center justify-center text-center">
-      {/* 32 Million+ Profiles Centered Headline with Candidate Avatars & Orbit */}
-      <div className="w-full flex flex-col items-center justify-center text-center">
-        <div className="max-w-[700px] w-full px-4 flex items-center justify-center">
+    <section
+      aria-labelledby="platform-profiles-title"
+      className="mx-auto pt-10 sm:pt-16 pb-8 sm:pb-10 w-full min-w-0 max-w-[980px] px-2 sm:px-4 select-none bg-white font-sans"
+    >
+      <div className="w-full">
+        {/* Profiles Section Header */}
+        <h2
+          id="platform-profiles-title"
+          className="text-[14px] sm:text-[15px] md:text-[16px] font-normal text-[#383838] m-0"
+        >
+          Profiles
+        </h2>
+
+        {/* 32 + Total Users graphic from official Unstop CloudFront CDN */}
+        <div className="mt-1 sm:mt-2 flex items-center select-none">
+          <span className="text-[#0073e6] font-extrabold text-[54px] sm:text-[80px] md:text-[104px] leading-none tracking-tight">
+            32
+          </span>
           <img
-            src="/images/headline-32m-tight.png"
-            alt="Profiles 32 Million+"
-            className="w-full max-w-[620px] h-auto object-contain mx-auto block drop-shadow-xs"
-            loading="lazy"
+            src="https://d8it4huxumps7.cloudfront.net/uploads/images/avif/unstop_total_users_new.png?d=700x225"
+            alt="Million+"
+            className="h-[58px] sm:h-[86px] md:h-[112px] w-auto object-contain block select-none pointer-events-none"
+            loading="eager"
           />
         </div>
-      </div>
 
-      {/* 5 Key Platform Stats Row - Completely Centered Matching Screenshot */}
-      <div className="w-full flex items-center justify-center mt-8 sm:mt-10 px-4">
-        <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-20 max-w-5xl w-full text-center">
-          {METRICS.map((stat, idx) => (
-            <div key={idx} className="flex flex-col items-center text-center min-w-[110px]">
-              <span className="text-xs sm:text-[13px] text-slate-500 font-medium mb-1.5 whitespace-nowrap">
-                {stat.label}
-              </span>
-              <div className="flex items-baseline justify-center font-black tracking-tight leading-none">
-                <span className="text-2xl sm:text-3xl md:text-4xl text-slate-900 font-black">
-                  {stat.number}
-                </span>
-                <span className="text-2xl sm:text-3xl md:text-4xl text-[#0073e6] font-black ml-0.5">
-                  {stat.unit}
-                </span>
-              </div>
+        {/* Platform statistics */}
+        <dl className="mt-8 sm:mt-10 grid grid-cols-2 gap-y-6 gap-x-4 sm:grid-cols-3 md:flex md:justify-between md:gap-0">
+          {stats.map(({ label, number, suffix }) => (
+            <div key={label} className="min-w-0">
+              <dt className="text-[13px] sm:text-[14px] md:text-[15px] font-normal text-[#475569] leading-tight">
+                {label}
+              </dt>
+              <dd className="mt-1.5 sm:mt-2 text-[24px] sm:text-[30px] md:text-[34px] font-bold tracking-tight text-[#1c1c1c] leading-none">
+                {number}
+                <span className="text-[#0073e6]">{suffix}</span>
+              </dd>
             </div>
           ))}
-        </div>
+        </dl>
       </div>
     </section>
   );

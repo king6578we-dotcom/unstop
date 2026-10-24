@@ -33,6 +33,30 @@
   height: 0 !important;
 }
 
+#main-scroll-container {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+  overscroll-behavior-y: contain;
+}
+
+#main-scroll-container::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Utility to hide scrollbars for horizontal carousels */
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 /* Glowing card effects */
 .glow-card {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -56,20 +80,82 @@
 /* Right-to-Left Continuous Marquee Ticker */
 @keyframes marquee {
   0% {
-    transform: translateX(0%);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
-.animate-marquee {
+.animate-marquee,
+.veterans-marquee {
   display: flex;
   width: max-content;
   animation: marquee 28s linear infinite;
+  will-change: transform;
 }
 
-.animate-marquee:hover {
+.animate-marquee:hover,
+.veterans-marquee:hover,
+.group:hover .veterans-marquee,
+.group:focus-within .veterans-marquee {
   animation-play-state: paused;
 }
+
+/* Hero Category Card Click Bounce Animation */
+@keyframes cardBounce {
+  0% {
+    transform: scale(1) translateY(0);
+  }
+  20% {
+    transform: scale(0.9) translateY(4px);
+  }
+  45% {
+    transform: scale(1.12) translateY(-8px);
+  }
+  70% {
+    transform: scale(0.96) translateY(2px);
+  }
+  85% {
+    transform: scale(1.03) translateY(-2px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-card-bounce {
+  animation: cardBounce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Featured Section Infinite Right-to-Left Marquee */
+@keyframes featuredMarquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.featured-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: featuredMarquee 38s linear infinite;
+  will-change: transform;
+}
+
+.featured-marquee-track:hover,
+.featured-marquee-container:hover .featured-marquee-track,
+.featured-marquee-container:focus-within .featured-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featured-marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+
 

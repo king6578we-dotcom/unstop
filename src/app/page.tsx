@@ -5,6 +5,7 @@ import { Sidebar } from '@/components/sidebar/Sidebar';
 import Header from '@/components/header/Header';
 import { HeroHeader, CategoryCards } from '@/components/hero/Hero';
 import { FeaturedSection } from '@/components/featured/FeaturedSection';
+// Trusted by Industry Veterans logo marquee
 import { TrustedVeterans } from '@/components/trusted/TrustedVeterans';
 import { CompetitionsSection } from '@/components/competitions/CompetitionsSection';
 import { InternshipsSection } from '@/components/internships/InternshipsSection';
@@ -14,19 +15,35 @@ import { RoleBasedMockInterviewSection } from '@/components/interview/RoleBasedM
 import { UpgradeCareerBanner } from '@/components/banner/UpgradeCareerBanner';
 import { CodingSprintSection } from '@/components/sprint/CodingSprintSection';
 import { PlatformStatsSection } from '@/components/stats/PlatformStatsSection';
-import { OpportunitiesSection } from '@/components/opportunities/OpportunitiesSection';
-import { MentorshipSection } from '@/components/mentorship/MentorshipSection';
-import { PracticeSection } from '@/components/practice/PracticeSection';
-import { HiringCompanies } from '@/components/companies/HiringCompanies';
 import { Footer } from '@/components/footer/Footer';
 import { AuthModal, OpportunityDetailModal, PostJobModal } from '@/components/modals/Modals';
 import { SplashScreen } from '@/components/splash';
-import { Opportunity, FeaturedItem, Mentor, PracticeTest } from '@/types';
+import { Opportunity, FeaturedItem } from '@/types';
 import { ALL_OPPORTUNITIES } from '@/data/mockData';
 
 export default function HomePage() {
   // Splash screen state (shown on initial load)
   const [showSplash, setShowSplash] = useState(true);
+
+  React.useEffect(() => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isNoSplashQuery =
+        urlParams.get('nosplash') === 'true' || urlParams.get('splash') === 'false';
+      const skipSplashSession = sessionStorage.getItem('skipSplash') === 'true';
+      const hasSeenSplashSession = sessionStorage.getItem('hasSeenSplash') === 'true';
+
+      if (isNoSplashQuery || skipSplashSession || hasSeenSplashSession) {
+        setShowSplash(false);
+        sessionStorage.removeItem('skipSplash');
+        sessionStorage.setItem('hasSeenSplash', 'true');
+      } else {
+        sessionStorage.setItem('hasSeenSplash', 'true');
+      }
+    } catch {
+      // Fallback
+    }
+  }, []);
 
   // Sidebar state
   const [activeNav, setActiveNav] = useState('Home');
@@ -77,10 +94,6 @@ export default function HomePage() {
   // Quick category selection
   const handleSelectCategory = (catId: string) => {
     setSelectedCategory(catId);
-    const element = document.getElementById('opportunities');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
   };
 
   // Explore dropdown selection
@@ -98,23 +111,10 @@ export default function HomePage() {
     }
   };
 
-  // Mentor click
-  const handleBookMentor = (mentor: Mentor) => {
-    if (!user) {
-      setIsAuthOpen(true);
-    } else {
-      alert(`Booking 1:1 session with ${mentor.name} (${mentor.company}). An invite will be sent to ${user.email}`);
-    }
-  };
 
-  // Practice test start
-  const handleStartTest = (test: PracticeTest) => {
-    alert(`Starting timed assessment: ${test.title} (${test.questionsCount} questions, ${test.durationMinutes} mins)`);
-  };
-
-  return (
-    <div className="h-dvh max-h-dvh w-screen overflow-hidden bg-[#ebf3fd] text-slate-900 flex font-sans p-[5px] select-none">
-      {/* Splash Screen: loads first before Unstop UI is revealed */}
+    return (
+    <div className="flex h-dvh w-full overflow-hidden bg-[#ebf3fd] p-[6px] font-sans text-slate-900">
+      {/* Splash screen */}
       {showSplash && (
         <SplashScreen
           duration={1800}
@@ -122,14 +122,15 @@ export default function HomePage() {
         />
       )}
 
-      {/* Left Collapsible Sidebar */}
+      {/* Existing sidebar */}
       <Sidebar
         activeNav={activeNav}
         setActiveNav={setActiveNav}
         onOpenPostModal={() => setIsPostJobOpen(true)}
         onOpenMentorModal={() => {
-          const mentorEl = document.getElementById('mentorship');
-          mentorEl?.scrollIntoView({ behavior: 'smooth' });
+          document
+            .getElementById('mentorship')
+            ?.scrollIntoView({ behavior: 'smooth' });
         }}
         isCollapsed={isSidebarCollapsed}
         setIsCollapsed={setIsSidebarCollapsed}
@@ -137,100 +138,82 @@ export default function HomePage() {
         setIsMobileOpen={setIsMobileSidebarOpen}
       />
 
-      {/* Main Content Area (Rounded white container nested inside light blue frame, scrollable internally so header remains fixed) */}
+      {/* Header, page sections and footer share this scroll container */}
       <div
         id="main-scroll-container"
-        className={`flex-1 flex flex-col rounded-[14px] bg-white border border-[#cee2f7] shadow-[0_2px_12px_rgba(28,73,128,0.05)] h-[calc(100dvh-10px)] max-h-[calc(100dvh-10px)] overflow-y-auto no-scrollbar transition-all duration-300 ease-in-out ${
-          isSidebarCollapsed ? 'lg:ml-[69px]' : 'lg:ml-[225px]'
-        }`}
+        className={`
+          flex h-full min-h-0 min-w-0 flex-1 flex-col
+          overflow-y-auto overflow-x-hidden
+          rounded-[14px] border border-[#cee2f7] bg-white
+          shadow-[0_2px_12px_rgba(28,73,128,0.05)]
+          transition-[margin] duration-300 ease-in-out
+          ${
+            isSidebarCollapsed
+              ? 'lg:ml-[70px]'
+              : 'lg:ml-[226px]'
+          }
+        `}
       >
-        {/* Top Navigation Bar */}
-        <Header
-          onOpenAuthModal={() => setIsAuthOpen(true)}
-          onOpenPostModal={() => setIsPostJobOpen(true)}
-          onSelectOpportunity={handleSelectItem}
-          onSelectExploreCategory={handleSelectExploreCategory}
-          isMobileOpen={isMobileSidebarOpen}
-          setIsMobileOpen={setIsMobileSidebarOpen}
-          isSidebarCollapsed={isSidebarCollapsed}
-          setIsSidebarCollapsed={setIsSidebarCollapsed}
-          user={user}
-          onLogout={() => setUser(null)}
-        />
+        {/* Header stays visible while the content scrolls */}
+        <div className="sticky top-0 z-30 w-full shrink-0 bg-white">
+          <Header
+            onOpenAuthModal={() => setIsAuthOpen(true)}
+            onOpenPostModal={() => setIsPostJobOpen(true)}
+            onSelectOpportunity={handleSelectItem}
+            onSelectExploreCategory={handleSelectExploreCategory}
+            isMobileOpen={isMobileSidebarOpen}
+            setIsMobileOpen={setIsMobileSidebarOpen}
+            isSidebarCollapsed={isSidebarCollapsed}
+            setIsSidebarCollapsed={setIsSidebarCollapsed}
+            onToggleSidebar={() => setIsSidebarCollapsed((prev) => !prev)}
+            user={user}
+            onLogout={() => setUser(null)}
+          />
+        </div>
 
-        {/* Page Inner Container - full screen width */}
-        <main className="flex-1 px-4 sm:px-6 md:px-8 py-6 w-full space-y-6">
-          {/* Hero Headline & Live Profiles Badge */}
+        {/* shrink-0 keeps the page content at its natural height */}
+        <main className="w-full min-w-0 shrink-0 space-y-6 px-4 py-6 sm:px-6 md:px-8">
           <HeroHeader />
 
-          {/* 3D Visual Category Cards Row */}
           <CategoryCards
             selectedCategory={selectedCategory}
             onSelectCategory={handleSelectCategory}
           />
 
-          {/* Featured Section with Horizontal Carousel & 4 Exact Screenshot Cards */}
           <FeaturedSection
             bookmarkedIds={bookmarkedIds}
             onToggleBookmark={handleToggleBookmark}
-            onSelectFeatured={handleSelectItem}
           />
 
-          {/* 1. Trusted by Industry Veterans (Continuous Right-to-Left Logo Marquee) */}
           <TrustedVeterans />
 
-          {/* 2. Competitions Section matching user screenshot */}
           <CompetitionsSection />
 
-          {/* 3. Internships Section matching user screenshot */}
           <InternshipsSection />
 
-          {/* 4. Jobs Section matching user screenshot */}
           <JobsSection />
 
-          {/* 5. Role-Based Mock Test Section matching user screenshot */}
           <RoleBasedMockTestSection />
 
-          {/* 6. Role-Based Mock Interview Section matching user screenshot */}
           <RoleBasedMockInterviewSection />
 
-          {/* 7. Upgrade Your Career with AI (Unstop Pro Banner) matching user screenshot */}
           <UpgradeCareerBanner />
 
-          {/* 8. 100 Days Coding Sprint & Code Conquest Challenge Cards */}
           <CodingSprintSection />
 
-          {/* 9. 32 Million+ Profiles & Platform Stats (Centered) */}
           <PlatformStatsSection />
-
-          {/* Opportunities Section with Filter Tabs */}
-          <OpportunitiesSection
-            bookmarkedIds={bookmarkedIds}
-            onToggleBookmark={handleToggleBookmark}
-            onSelectOpportunity={handleSelectItem}
-            selectedCategoryFilter={selectedCategory}
-          />
-
-          {/* 1-on-1 Mentorship Section */}
-          <MentorshipSection onBookMentor={handleBookMentor} />
-
-          {/* Mock Tests & Prep Zone */}
-          <PracticeSection onStartTest={handleStartTest} />
-
-          {/* Top Companies Showcase */}
-          <HiringCompanies
-            onSelectCompany={(name) => {
-              const oppsSection = document.getElementById('opportunities');
-              oppsSection?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          />
         </main>
 
-        {/* Footer */}
-        <Footer />
+        {/* Footer with full-width expanded light blue background and centered 980px inner content, static at page bottom */}
+        <div
+          id="home-footer"
+          className="w-full min-w-0 shrink-0 mt-auto static"
+        >
+          <Footer />
+        </div>
       </div>
 
-      {/* Modals */}
+      {/* Existing modals */}
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
