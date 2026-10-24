@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   Building2,
   Calendar,
@@ -80,9 +81,29 @@ export const UnForBusinessSection: React.FC<UnForBusinessSectionProps> = ({
   className = '',
   showTopNavbar = true,
 }) => {
+  const router = useRouter();
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleBackToMain = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    try {
+      sessionStorage.setItem('skipSplash', 'true');
+      sessionStorage.setItem('hasSeenSplash', 'true');
+    } catch {}
+
+    if (
+      typeof window !== 'undefined' &&
+      window.history.length > 1 &&
+      document.referrer &&
+      document.referrer.includes(window.location.host)
+    ) {
+      window.history.back();
+    } else {
+      router.push('/?nosplash=true');
+    }
+  };
   const [demoFormData, setDemoFormData] = useState({
     name: '',
     workEmail: '',
@@ -117,10 +138,11 @@ export const UnForBusinessSection: React.FC<UnForBusinessSectionProps> = ({
       {showTopNavbar && (
         <header className="sticky top-0 z-40 w-full border-b border-[#e5e7eb] bg-white shadow-xs">
           <div className="mx-auto flex h-[62px] sm:h-[68px] w-full max-w-[1360px] items-center justify-between px-3 sm:px-6 lg:px-8">
-            {/* Left: Unstop Brand Logo (Redirects to previous/main website) */}
+            {/* Left: Unstop Brand Logo (Redirects to previous/main website without splash) */}
             <div className="flex shrink-0 items-center">
               <Link
-                href="/"
+                href="/?nosplash=true"
+                onClick={handleBackToMain}
                 className="flex items-center gap-2.5 group cursor-pointer"
                 title="Back to Unstop (Main Website)"
                 aria-label="Back to Unstop Main Website"
@@ -211,7 +233,8 @@ export const UnForBusinessSection: React.FC<UnForBusinessSectionProps> = ({
 
               {/* 3. For Candidate (Pale yellow/gold tinted pill button) */}
               <Link
-                href="/"
+                href="/?nosplash=true"
+                onClick={handleBackToMain}
                 className="hidden md:inline-flex h-[38px] sm:h-[40px] items-center gap-1.5 rounded-full border border-[#f59e0b]/40 bg-[#fffbeb] hover:bg-[#fef3c7] px-3 sm:px-3.5 text-[12.5px] sm:text-[13px] font-medium text-[#1f2937] transition active:scale-95 whitespace-nowrap"
                 title="Switch to Unstop Candidate Portal"
               >

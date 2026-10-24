@@ -20,10 +20,9 @@ import { AuthModal, OpportunityDetailModal, PostJobModal } from '@/components/mo
 import { SplashScreen } from '@/components/splash';
 import { Opportunity, FeaturedItem } from '@/types';
 import { ALL_OPPORTUNITIES } from '@/data/mockData';
-
 export default function HomePage() {
-  // Splash screen state (shown on initial load)
-  const [showSplash, setShowSplash] = useState(true);
+  // Splash screen state (shown only on initial fresh visit of session)
+  const [showSplash, setShowSplash] = useState(false);
 
   React.useEffect(() => {
     try {
@@ -35,13 +34,14 @@ export default function HomePage() {
 
       if (isNoSplashQuery || skipSplashSession || hasSeenSplashSession) {
         setShowSplash(false);
-        sessionStorage.removeItem('skipSplash');
         sessionStorage.setItem('hasSeenSplash', 'true');
       } else {
+        // Show splash only on fresh initial load
+        setShowSplash(true);
         sessionStorage.setItem('hasSeenSplash', 'true');
       }
     } catch {
-      // Fallback
+      setShowSplash(false);
     }
   }, []);
 

@@ -20,7 +20,21 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
   onFinish,
 }) => {
   const [isFadingOut, setIsFadingOut] = useState(false);
-  const [isMounted, setIsMounted] = useState(true);
+  const [isMounted, setIsMounted] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (
+        urlParams.get('nosplash') === 'true' ||
+        urlParams.get('splash') === 'false' ||
+        sessionStorage.getItem('skipSplash') === 'true' ||
+        sessionStorage.getItem('hasSeenSplash') === 'true'
+      ) {
+        return false;
+      }
+    } catch {}
+    return true;
+  });
   const [dots, setDots] = useState('');
 
   // Skip splash immediately if requested
@@ -28,7 +42,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
     try {
       if (
         sessionStorage.getItem('skipSplash') === 'true' ||
-        (typeof window !== 'undefined' && window.location.search.includes('nosplash=true'))
+        sessionStorage.getItem('hasSeenSplash') === 'true' ||
+        (typeof window !== 'undefined' &&
+          (window.location.search.includes('nosplash=true') ||
+            window.location.search.includes('splash=false')))
       ) {
         setIsMounted(false);
         onFinish?.();
