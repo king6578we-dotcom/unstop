@@ -468,6 +468,12 @@ const footerStyles = `
   .uf-paymentRow { justify-content: center; }
   .uf-certifications img { width: 48px; height: 48px; }
 }
+@media (max-width: 440px) {
+  .uf-wideGroup ul { grid-template-columns: 1fr; gap: 6px; }
+  .uf-paymentLogos { width: 100%; }
+  .uf-certifications { gap: 8px; }
+  .uf-certifications img { width: 42px; height: 42px; }
+}
 
 .uf-footer { flex-shrink: 0; position: static; }
 .uf-footer [hidden] { display: none !important; }

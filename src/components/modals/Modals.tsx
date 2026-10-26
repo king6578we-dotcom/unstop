@@ -125,7 +125,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         <div className="absolute bottom-20 left-10 w-8 h-8 bg-[#1c4980] text-white rounded-full flex items-center justify-center font-bold text-[10px]">un</div>
       </div>
 
-      <div className="relative w-full max-w-[710px] bg-white rounded-[20px] shadow-[0_20px_50px_-10px_rgba(15,23,42,0.18)] border border-[#edf0f4] flex overflow-hidden p-[6px] sm:p-[8px] md:h-[480px]">
+      <div className="relative w-full max-w-[710px] max-h-[92vh] bg-white rounded-[20px] shadow-[0_20px_50px_-10px_rgba(15,23,42,0.18)] border border-[#edf0f4] flex overflow-hidden p-[6px] sm:p-[8px] md:h-[480px]">
         {/* Close Button */}
         <button
           onClick={onClose}

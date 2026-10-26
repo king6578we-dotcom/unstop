@@ -16,12 +16,12 @@ export const MentorshipSection: React.FC<MentorshipSectionProps> = ({ onBookMent
       className="mx-auto w-full min-w-0 max-w-[980px] bg-white py-5 px-2 sm:px-4 font-[Arial,Helvetica,sans-serif] select-none border-t border-slate-200/80"
     >
       {/* Header Matching Role-Based Section */}
-      <div className="flex items-center justify-between gap-4 mb-5">
-        <div className="relative min-w-0 pl-3.5 before:absolute before:inset-y-0 before:left-0 before:w-[4px] before:rounded-r-full before:bg-[#0073e6]">
-          <h2 className="text-[21px] font-semibold leading-[1.2] text-[#383838] sm:text-[26px]">
+      <div className="flex items-center justify-between gap-2 sm:gap-4 mb-4 sm:mb-5">
+        <div className="relative min-w-0 pl-3 sm:pl-3.5 before:absolute before:inset-y-0 before:left-0 before:w-[3.5px] sm:before:w-[4px] before:rounded-r-full before:bg-[#0073e6]">
+          <h2 className="text-[18px] sm:text-[21px] md:text-[26px] font-semibold leading-[1.2] text-[#383838]">
             1-on-1 Mentorship Sessions
           </h2>
-          <p className="mt-0.5 text-[13px] font-normal leading-[20px] text-[#777] sm:text-[15px]">
+          <p className="mt-0.5 text-[12px] sm:text-[13px] md:text-[15px] font-normal leading-snug sm:leading-[20px] text-[#777] line-clamp-1 sm:line-clamp-none">
             Learn directly from senior engineers and engineering leaders at FAANG &amp; top unicorns.
           </p>
         </div>
@@ -30,17 +30,17 @@ export const MentorshipSection: React.FC<MentorshipSectionProps> = ({ onBookMent
         <button
           type="button"
           onClick={() => alert('Viewing all 500+ Mentors across Tech, Product & Management')}
-          className="inline-flex h-[38px] shrink-0 items-center justify-center gap-2 rounded-full border border-[#b8d8ff] bg-[#f3f8ff] px-4 text-[14px] font-medium text-[#0073e6] transition-colors hover:bg-[#e6f1ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0073e6] sm:text-[15px] cursor-pointer"
+          className="inline-flex h-[34px] sm:h-[38px] shrink-0 items-center justify-center gap-1.5 sm:gap-2 rounded-full border border-[#b8d8ff] bg-[#f3f8ff] px-3 sm:px-4 text-[12px] sm:text-[14px] md:text-[15px] font-medium text-[#0073e6] transition-colors hover:bg-[#e6f1ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0073e6] cursor-pointer"
         >
           <span>View All</span>
-          <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-[#0073e6] text-white">
-            <ArrowRight size={11} strokeWidth={2.5} aria-hidden="true" />
+          <span className="flex h-[16px] w-[16px] sm:h-[18px] sm:w-[18px] items-center justify-center rounded-full bg-[#0073e6] text-white">
+            <ArrowRight size={10} strokeWidth={2.5} aria-hidden="true" />
           </span>
         </button>
       </div>
 
       {/* Grid of Mentors */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+      <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
         {TOP_MENTORS.map((mentor) => (
           <div
             key={mentor.id}

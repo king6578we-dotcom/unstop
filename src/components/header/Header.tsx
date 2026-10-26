@@ -163,16 +163,16 @@ function SearchDropdown({ id, isOpen, onClose, onSelectItem }: SearchDropdownPro
       id={id}
       role="group"
       aria-label="Explore search categories"
-      className="absolute left-1/2 -translate-x-1/2 top-full z-[60] mt-2.5 w-[540px] sm:w-[580px] md:w-[600px] max-w-[calc(100vw-32px)] overflow-hidden rounded-[24px] border border-slate-200/90 bg-white p-5 shadow-[0_12px_36px_rgba(0,0,0,0.12)]"
+      className="absolute left-1/2 -translate-x-1/2 top-full z-[60] mt-2 w-[540px] sm:w-[580px] md:w-[600px] max-w-[calc(100vw-24px)] sm:max-w-[calc(100vw-32px)] max-h-[80vh] overflow-y-auto rounded-[20px] sm:rounded-[24px] border border-slate-200/90 bg-white p-3.5 sm:p-5 shadow-[0_12px_36px_rgba(0,0,0,0.12)]"
       onMouseDown={(e) => e.stopPropagation()}
     >
       {/* "Explore" Header matching photo */}
-      <h3 className="text-[13px] font-medium text-slate-700 tracking-tight mb-4">
+      <h3 className="text-[12.5px] sm:text-[13px] font-medium text-slate-700 tracking-tight mb-3 sm:mb-4">
         Explore
       </h3>
 
-      {/* 6x2 Icon Grid matching photo */}
-      <div className="grid grid-cols-6 gap-y-4 gap-x-2">
+      {/* Responsive Icon Grid: 3 cols on mobile, 4 on xs/sm, 6 on desktop */}
+      <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-6 gap-y-3 sm:gap-y-4 gap-x-1.5 sm:gap-x-2">
         {exploreItems.map((item) => (
           <button
             key={item.id}
@@ -181,15 +181,15 @@ function SearchDropdown({ id, isOpen, onClose, onSelectItem }: SearchDropdownPro
               if (onSelectItem) onSelectItem(item);
               if (onClose) onClose();
             }}
-            className={`group flex cursor-pointer flex-col items-center gap-2 rounded-lg text-center ${FOCUS}`}
+            className={`group flex cursor-pointer flex-col items-center gap-1.5 sm:gap-2 rounded-lg text-center ${FOCUS}`}
           >
-            {/* Soft blue-grey circular icon background matching photo */}
-            <div className="w-[48px] h-[48px] rounded-full bg-[#f0f4f9] group-hover:bg-[#e2eef9] flex items-center justify-center transition-colors">
+            {/* Soft blue-grey circular icon background */}
+            <div className="w-[42px] h-[42px] sm:w-[48px] sm:h-[48px] rounded-full bg-[#f0f4f9] group-hover:bg-[#e2eef9] flex items-center justify-center transition-colors">
               {item.icon}
             </div>
 
-            {/* Label in 12px font-medium text-slate-800 */}
-            <span className="text-[11.5px] sm:text-[12px] font-medium text-slate-800 group-hover:text-[#1c4980] transition-colors leading-[1.25] text-center">
+            {/* Label in 11.5px/12px font-medium */}
+            <span className="text-[11px] sm:text-[12px] font-medium text-slate-800 group-hover:text-[#1c4980] transition-colors leading-[1.2] sm:leading-[1.25] text-center">
               {item.multiLine ? (
                 <>
                   {item.multiLine[0]}
@@ -295,12 +295,12 @@ export default function Header({
 
   return (
     <div className="sticky top-0 z-30">
-      <header className="h-[58px] rounded-t-[14px] border-b border-slate-100 bg-white px-4 sm:px-6 md:px-8">
-        <div className="relative w-full h-full flex items-center justify-between gap-2 sm:gap-4">
+      <header className="h-[54px] sm:h-[58px] rounded-t-[14px] border-b border-slate-100 bg-white px-2.5 sm:px-6 md:px-8">
+        <div className="relative w-full h-full flex items-center justify-between gap-1.5 sm:gap-4">
         {/* Left section: Controls */}
-        <div className="flex items-center gap-2 shrink-0 z-10">
-          {/* Mobile menu & logo */}
-          <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 z-10">
+          {/* Mobile/Tablet menu & logo (visible up to 1024px) */}
+          <div className="flex items-center gap-1.5 sm:gap-2 lg:hidden">
             <button
               onClick={handleToggleMobile}
               type="button"
@@ -312,13 +312,13 @@ export default function Header({
             <UnstopLogo />
           </div>
 
-          {/* Toggle sidebar button: minimize and open on click */}
+          {/* Desktop Toggle sidebar button: minimize and open on click (visible on lg screens 1024px+) */}
           <button
             onClick={handleToggleSidebar}
             type="button"
             title={isSidebarCollapsed ? "Open sidebar" : "Minimize sidebar"}
             aria-label={isSidebarCollapsed ? "Open sidebar" : "Minimize sidebar"}
-            className={`hidden h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#888888] transition-colors hover:bg-slate-100 hover:text-[#444444] md:flex ${FOCUS}`}
+            className={`hidden h-7 w-7 shrink-0 items-center justify-center rounded-md text-[#888888] transition-colors hover:bg-slate-100 hover:text-[#444444] lg:flex ${FOCUS}`}
           >
             {isSidebarCollapsed ? (
               <ChevronsRight aria-hidden="true" className="h-[18px] w-[18px]" />
@@ -328,10 +328,10 @@ export default function Header({
           </button>
         </div>
 
-        {/* Center search field matching user screenshot */}
+        {/* Center search field */}
         <div
           ref={searchContainerRef}
-          className="sm:absolute sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 flex-1 sm:flex-initial w-auto sm:w-[320px] md:w-[340px] mx-2 sm:mx-0 z-20"
+          className="sm:absolute sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 flex-1 sm:flex-initial w-full sm:w-[280px] md:w-[320px] lg:w-[340px] mx-1 sm:mx-0 z-20 min-w-0"
           onKeyDown={(event) => {
             if (event.key === 'Escape') {
               handleClear(event);
@@ -340,13 +340,13 @@ export default function Header({
           }}
         >
           <div
-            className={`flex h-[36px] w-full items-center rounded-full bg-white transition-all ${
+            className={`flex h-[34px] sm:h-[36px] w-full items-center rounded-full bg-white transition-all ${
               isSearchFocused
                 ? 'border border-[#0073e6] shadow-[0_0_0_1.5px_#0073e6]'
                 : 'border border-[#d0d5dd] hover:border-[#98a2b3]'
             }`}
           >
-            <Search aria-hidden="true" strokeWidth={2.2} className="ml-3 h-[15px] w-[15px] shrink-0 text-[#2d3748]" />
+            <Search aria-hidden="true" strokeWidth={2.2} className="ml-2.5 sm:ml-3 h-[14px] w-[14px] sm:h-[15px] sm:w-[15px] shrink-0 text-[#2d3748]" />
             <input
               ref={inputRef}
               type="text"
@@ -359,7 +359,7 @@ export default function Header({
               onChange={(event) => updateQuery(event.target.value)}
               onFocus={() => setIsSearchFocused(true)}
               onClick={() => setIsSearchFocused(true)}
-              className="h-full min-w-0 flex-1 rounded-full border-0 bg-transparent pl-2 pr-2.5 text-[13.5px] font-normal text-[#1e293b] outline-none placeholder:text-[#8fa8c6] focus:ring-0"
+              className="h-full min-w-0 flex-1 rounded-full border-0 bg-transparent pl-1.5 sm:pl-2 pr-2 sm:pr-2.5 text-[12.5px] sm:text-[13.5px] font-normal text-[#1e293b] outline-none placeholder:text-[#8fa8c6] focus:ring-0"
             />
             {query && (
               <button
@@ -367,7 +367,7 @@ export default function Header({
                 onClick={handleClear}
                 title="Clear search"
                 aria-label="Clear search"
-                className={`mr-2 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 ${FOCUS}`}
+                className={`mr-1.5 sm:mr-2 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 ${FOCUS}`}
               >
                 <X aria-hidden="true" className="h-2.5 w-2.5" />
               </button>
@@ -383,14 +383,14 @@ export default function Header({
         </div>
 
         {/* Right Actions */}
-        <div className="flex shrink-0 items-center justify-end gap-2.5 z-10">
-          {/* For Business */}
+        <div className="flex shrink-0 items-center justify-end gap-1.5 sm:gap-2.5 z-10">
+          {/* For Business (visible on sm and above) */}
           <div className="relative hidden sm:block">
             <a
               href="/for-business"
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex h-[36px] shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-[#80baff] bg-[#deedfc] px-3.5 text-[13px] font-normal text-[#1c4980] transition-colors hover:bg-[#cfe5fc] cursor-pointer ${FOCUS}`}
+              className={`flex h-[34px] sm:h-[36px] shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-[#80baff] bg-[#deedfc] px-3 sm:px-3.5 text-[12.5px] sm:text-[13px] font-normal text-[#1c4980] transition-colors hover:bg-[#cfe5fc] cursor-pointer ${FOCUS}`}
             >
               <BusinessIcon />
               <span>For <span className="font-semibold">Business</span></span>
@@ -407,9 +407,9 @@ export default function Header({
               setIsSearchFocused(false);
               setIsLoginOpen(true);
             }}
-            className={`flex h-[36px] shrink-0 items-center justify-center gap-1.5 rounded-full bg-[#0073e6] px-4 text-[13px] font-semibold text-white transition-colors hover:bg-[#0062c4] ${FOCUS}`}
+            className={`flex h-[34px] sm:h-[36px] shrink-0 items-center justify-center gap-1 sm:gap-1.5 rounded-full bg-[#0073e6] px-3 sm:px-4 text-[12px] sm:text-[13px] font-semibold text-white transition-colors hover:bg-[#0062c4] ${FOCUS}`}
           >
-            <LogIn aria-hidden="true" strokeWidth={2.2} className="h-4 w-4" />
+            <LogIn aria-hidden="true" strokeWidth={2.2} className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             <span>Login</span>
           </button>
         </div>

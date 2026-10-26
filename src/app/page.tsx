@@ -172,7 +172,7 @@ export default function HomePage() {
         </div>
 
         {/* shrink-0 keeps the page content at its natural height */}
-        <main className="w-full min-w-0 shrink-0 space-y-6 px-4 py-6 sm:px-6 md:px-8">
+        <main className="w-full min-w-0 shrink-0 space-y-6 px-2 xs:px-4 sm:px-6 md:px-8 py-4 sm:py-6">
           <HeroHeader />
 
           <CategoryCards

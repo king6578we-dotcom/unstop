@@ -26,14 +26,14 @@ export const PlatformStatsSection: React.FC = () => {
         </h2>
 
         {/* 32 + Total Users graphic from official Unstop CloudFront CDN */}
-        <div className="mt-1 sm:mt-2 flex items-center select-none">
-          <span className="text-[#0073e6] font-extrabold text-[54px] sm:text-[80px] md:text-[104px] leading-none tracking-tight">
+        <div className="mt-1 sm:mt-2 flex items-center select-none overflow-hidden">
+          <span className="text-[#0073e6] font-extrabold text-[42px] xs:text-[54px] sm:text-[80px] md:text-[104px] leading-none tracking-tight shrink-0">
             32
           </span>
           <img
             src="https://d8it4huxumps7.cloudfront.net/uploads/images/avif/unstop_total_users_new.png?d=700x225"
             alt="Million+"
-            className="h-[58px] sm:h-[86px] md:h-[112px] w-auto object-contain block select-none pointer-events-none"
+            className="h-[44px] xs:h-[58px] sm:h-[86px] md:h-[112px] max-w-[65%] w-auto object-contain block select-none pointer-events-none"
             loading="eager"
           />
         </div>

@@ -14,6 +14,7 @@ import {
   BrainCircuit,
   Briefcase,
   X,
+  Menu,
   PhoneCall,
   Mail,
   ChevronDown,
@@ -83,6 +84,7 @@ export const UnForBusinessSection: React.FC<UnForBusinessSectionProps> = ({
 }) => {
   const router = useRouter();
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -207,7 +209,7 @@ export const UnForBusinessSection: React.FC<UnForBusinessSectionProps> = ({
             </nav>
 
             {/* Right: Actions & Buttons */}
-            <div className="flex items-center gap-2 sm:gap-2.5">
+            <div className="flex items-center gap-1.5 sm:gap-2.5">
               {/* Divider visible on desktop */}
               <div className="hidden xl:block h-6 w-px bg-[#d1d5db] mx-1" />
 
@@ -215,17 +217,17 @@ export const UnForBusinessSection: React.FC<UnForBusinessSectionProps> = ({
               <button
                 type="button"
                 onClick={() => setIsDemoModalOpen(true)}
-                className="inline-flex h-[38px] sm:h-[40px] items-center gap-1.5 sm:gap-2 rounded-full bg-[#0073e6] px-3.5 sm:px-4 text-[12.5px] sm:text-[13px] font-semibold text-white shadow-xs transition hover:bg-[#005fb8] hover:shadow-md active:scale-95 cursor-pointer whitespace-nowrap"
+                className="inline-flex h-[36px] sm:h-[40px] items-center gap-1 sm:gap-2 rounded-full bg-[#0073e6] px-2.5 sm:px-4 text-[12px] sm:text-[13px] font-semibold text-white shadow-xs transition hover:bg-[#005fb8] hover:shadow-md active:scale-95 cursor-pointer whitespace-nowrap"
               >
-                <Calendar className="h-4 w-4 shrink-0" />
-                <span>Request a demo</span>
+                <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                <span><span className="hidden xs:inline">Request a </span>Demo</span>
               </button>
 
               {/* 2. + Host (White pill with border) */}
               <button
                 type="button"
                 onClick={onOpenPostModal || (() => setIsDemoModalOpen(true))}
-                className="inline-flex h-[38px] sm:h-[40px] items-center gap-1 rounded-full border border-[#1c4980] bg-white px-3.5 sm:px-4 text-[12.5px] sm:text-[13px] font-medium text-[#1c4980] shadow-2xs transition hover:bg-[#f0f6ff] active:scale-95 cursor-pointer whitespace-nowrap"
+                className="inline-flex h-[36px] sm:h-[40px] items-center gap-1 rounded-full border border-[#1c4980] bg-white px-2.5 sm:px-4 text-[12px] sm:text-[13px] font-medium text-[#1c4980] shadow-2xs transition hover:bg-[#f0f6ff] active:scale-95 cursor-pointer whitespace-nowrap"
               >
                 <Plus className="h-3.5 w-3.5 stroke-[2.5]" />
                 <span>Host</span>
@@ -235,7 +237,7 @@ export const UnForBusinessSection: React.FC<UnForBusinessSectionProps> = ({
               <Link
                 href="/?nosplash=true"
                 onClick={handleBackToMain}
-                className="hidden md:inline-flex h-[38px] sm:h-[40px] items-center gap-1.5 rounded-full border border-[#f59e0b]/40 bg-[#fffbeb] hover:bg-[#fef3c7] px-3 sm:px-3.5 text-[12.5px] sm:text-[13px] font-medium text-[#1f2937] transition active:scale-95 whitespace-nowrap"
+                className="hidden md:inline-flex h-[36px] sm:h-[40px] items-center gap-1.5 rounded-full border border-[#f59e0b]/40 bg-[#fffbeb] hover:bg-[#fef3c7] px-3 sm:px-3.5 text-[12px] sm:text-[13px] font-medium text-[#1f2937] transition active:scale-95 whitespace-nowrap"
                 title="Switch to Unstop Candidate Portal"
               >
                 <div className="flex h-5 w-5 items-center justify-center rounded-[4px] border border-[#d97706]/60 bg-white text-[9.5px] font-black text-[#1c4980] leading-none">
@@ -247,12 +249,62 @@ export const UnForBusinessSection: React.FC<UnForBusinessSectionProps> = ({
               {/* 4. Login (Blue pill button) */}
               <a
                 href="/login"
-                className="inline-flex h-[38px] sm:h-[40px] items-center justify-center rounded-full bg-[#0073e6] px-4 sm:px-5 text-[12.5px] sm:text-[13px] font-semibold text-white shadow-xs transition hover:bg-[#005fb8] active:scale-95 whitespace-nowrap"
+                className="inline-flex h-[36px] sm:h-[40px] items-center justify-center rounded-full bg-[#0073e6] px-3 sm:px-5 text-[12px] sm:text-[13px] font-semibold text-white shadow-xs transition hover:bg-[#005fb8] active:scale-95 whitespace-nowrap"
               >
                 <span>Login</span>
               </a>
+
+              {/* 5. Mobile Menu Toggle */}
+              <button
+                type="button"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label="Toggle navigation menu"
+                className="lg:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100 transition cursor-pointer"
+              >
+                {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
             </div>
           </div>
+
+          {/* Mobile Drawer Navigation Menu */}
+          {isMobileMenuOpen && (
+            <div className="lg:hidden border-t border-slate-200 bg-white px-4 py-4 shadow-lg space-y-3">
+              <nav className="flex flex-col space-y-2 text-[14px] font-medium text-[#2d3748]">
+                <a
+                  href="#business-clients"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="rounded-lg px-3 py-2 hover:bg-slate-50 hover:text-[#0073e6] transition"
+                >
+                  Clients
+                </a>
+                <a
+                  href="#business-testimonials"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="rounded-lg px-3 py-2 hover:bg-slate-50 hover:text-[#0073e6] transition"
+                >
+                  Testimonials
+                </a>
+                <a
+                  href="#business-faq"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="rounded-lg px-3 py-2 hover:bg-slate-50 hover:text-[#0073e6] transition"
+                >
+                  FAQs
+                </a>
+                <Link
+                  href="/?nosplash=true"
+                  onClick={(e) => {
+                    setIsMobileMenuOpen(false);
+                    handleBackToMain(e);
+                  }}
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-amber-700 bg-amber-50 hover:bg-amber-100 transition"
+                >
+                  <span className="flex h-5 w-5 items-center justify-center rounded-[4px] border border-[#d97706]/60 bg-white text-[9.5px] font-black text-[#1c4980]">un</span>
+                  <span>Switch to Candidate Portal</span>
+                </Link>
+              </nav>
+            </div>
+          )}
         </header>
       )}
 
@@ -267,22 +319,22 @@ export const UnForBusinessSection: React.FC<UnForBusinessSectionProps> = ({
             <span>ENTERPRISE RECRUITMENT &amp; CAMPUS ENGAGEMENT</span>
           </div>
 
-          <h1 className="text-[32px] sm:text-[42px] md:text-[48px] font-extrabold leading-[1.15] tracking-tight text-[#1a202c]">
+          <h1 className="text-[26px] xs:text-[32px] sm:text-[42px] md:text-[48px] font-extrabold leading-[1.15] tracking-tight text-[#1a202c]">
             Hire, Assess &amp; Engage{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0073e6] via-[#0052cc] to-[#003d99]">
               32M+ Early Talent
             </span>
           </h1>
 
-          <p className="mt-4 text-[15px] sm:text-[17px] text-[#4a5568] leading-relaxed">
+          <p className="mt-4 text-[14px] sm:text-[17px] text-[#4a5568] leading-relaxed">
             Accelerate your employer brand on 10,000+ campuses, screen engineering and business candidates with AI assessments, and hire verified top performers.
           </p>
 
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-6 sm:mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
               type="button"
               onClick={() => setIsDemoModalOpen(true)}
-              className="inline-flex h-12 items-center gap-2 rounded-full bg-[#0073e6] px-7 text-[14px] font-bold text-white shadow-md hover:bg-[#005fb8] hover:shadow-lg transition active:scale-95 cursor-pointer"
+              className="w-full sm:w-auto inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-full bg-[#0073e6] px-6 sm:px-7 text-[13.5px] sm:text-[14px] font-bold text-white shadow-md hover:bg-[#005fb8] hover:shadow-lg transition active:scale-95 cursor-pointer"
             >
               <Calendar className="h-4 w-4" />
               <span>Schedule a Live Demo</span>
@@ -291,29 +343,29 @@ export const UnForBusinessSection: React.FC<UnForBusinessSectionProps> = ({
             <button
               type="button"
               onClick={onOpenPostModal || (() => setIsDemoModalOpen(true))}
-              className="inline-flex h-12 items-center gap-2 rounded-full border border-[#cbd5e1] bg-white px-6 text-[14px] font-semibold text-[#1e293b] shadow-2xs hover:bg-[#f8fafc] hover:border-[#94a3b8] transition active:scale-95 cursor-pointer"
+              className="w-full sm:w-auto inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-full border border-[#cbd5e1] bg-white px-5 sm:px-6 text-[13.5px] sm:text-[14px] font-semibold text-[#1e293b] shadow-2xs hover:bg-[#f8fafc] hover:border-[#94a3b8] transition active:scale-95 cursor-pointer"
             >
               <span>+ Post a Competition</span>
             </button>
           </div>
 
           {/* Quick Metrics Bar */}
-          <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 rounded-2xl border border-[#dbeafe] bg-gradient-to-r from-[#f0f7ff] via-white to-[#f0f7ff] p-4 sm:p-6 shadow-xs">
+          <div className="mt-8 sm:mt-10 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 rounded-2xl border border-[#dbeafe] bg-gradient-to-r from-[#f0f7ff] via-white to-[#f0f7ff] p-3.5 sm:p-6 shadow-xs">
             <div>
-              <div className="text-[24px] sm:text-[30px] font-black text-[#0073e6]">32M+</div>
-              <div className="text-[12px] sm:text-[13px] font-medium text-[#64748b]">Active Students</div>
+              <div className="text-[20px] xs:text-[24px] sm:text-[30px] font-black text-[#0073e6]">32M+</div>
+              <div className="text-[11.5px] sm:text-[13px] font-medium text-[#64748b]">Active Students</div>
             </div>
             <div>
-              <div className="text-[24px] sm:text-[30px] font-black text-[#0073e6]">10,000+</div>
-              <div className="text-[12px] sm:text-[13px] font-medium text-[#64748b]">College Campuses</div>
+              <div className="text-[20px] xs:text-[24px] sm:text-[30px] font-black text-[#0073e6]">10,000+</div>
+              <div className="text-[11.5px] sm:text-[13px] font-medium text-[#64748b]">College Campuses</div>
             </div>
             <div>
-              <div className="text-[24px] sm:text-[30px] font-black text-[#0073e6]">800+</div>
-              <div className="text-[12px] sm:text-[13px] font-medium text-[#64748b]">Enterprise Clients</div>
+              <div className="text-[20px] xs:text-[24px] sm:text-[30px] font-black text-[#0073e6]">800+</div>
+              <div className="text-[11.5px] sm:text-[13px] font-medium text-[#64748b]">Enterprise Clients</div>
             </div>
             <div>
-              <div className="text-[24px] sm:text-[30px] font-black text-[#0073e6]">70%</div>
-              <div className="text-[12px] sm:text-[13px] font-medium text-[#64748b]">Faster Time-to-Hire</div>
+              <div className="text-[20px] xs:text-[24px] sm:text-[30px] font-black text-[#0073e6]">70%</div>
+              <div className="text-[11.5px] sm:text-[13px] font-medium text-[#64748b]">Faster Time-to-Hire</div>
             </div>
           </div>
         </div>
@@ -570,31 +622,31 @@ export const UnForBusinessSection: React.FC<UnForBusinessSectionProps> = ({
       {/* ================================================================
           7. BOTTOM CTA
          ================================================================ */}
-      <div className="mx-auto w-full max-w-[1360px] px-3 sm:px-6 lg:px-8 py-10">
-        <div className="rounded-3xl bg-gradient-to-r from-[#1c4980] via-[#0f3460] to-[#0a2342] p-6 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
+      <div className="mx-auto w-full max-w-[1360px] px-3 sm:px-6 lg:px-8 py-8 sm:py-10">
+        <div className="rounded-3xl bg-gradient-to-r from-[#1c4980] via-[#0f3460] to-[#0a2342] p-5 sm:p-10 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="text-center md:text-left">
             <span className="text-xs font-bold text-amber-300 uppercase tracking-widest">
               Ready to Transform Campus Hiring?
             </span>
-            <h3 className="mt-1 text-[24px] sm:text-[30px] font-bold text-white">
+            <h3 className="mt-1 text-[20px] xs:text-[24px] sm:text-[30px] font-bold text-white leading-tight">
               Connect with 32M+ Ambitious Candidates Today
             </h3>
-            <p className="mt-2 text-[14px] text-slate-300 max-w-xl">
+            <p className="mt-2 text-[13px] sm:text-[14px] text-slate-300 max-w-xl">
               Talk to our university relations experts and see how leading brands drive 10x talent ROI on Unstop.
             </p>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto shrink-0">
             <button
               type="button"
               onClick={() => setIsDemoModalOpen(true)}
-              className="rounded-full bg-white px-6 py-3 text-[13px] font-bold text-[#1c4980] shadow-md hover:bg-slate-100 transition active:scale-95 cursor-pointer"
+              className="w-full sm:w-auto rounded-full bg-white px-6 py-3 text-[13px] font-bold text-[#1c4980] shadow-md hover:bg-slate-100 transition active:scale-95 cursor-pointer text-center"
             >
               Request a Live Demo
             </button>
             <a
               href="mailto:business@unstop.com"
-              className="rounded-full border border-white/40 bg-white/10 px-5 py-3 text-[13px] font-semibold text-white hover:bg-white/20 transition active:scale-95"
+              className="w-full sm:w-auto rounded-full border border-white/40 bg-white/10 px-5 py-3 text-[13px] font-semibold text-white hover:bg-white/20 transition active:scale-95 text-center"
             >
               Email Us
             </a>
@@ -609,11 +661,11 @@ export const UnForBusinessSection: React.FC<UnForBusinessSectionProps> = ({
         <div
           role="dialog"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4"
           onClick={() => setIsDemoModalOpen(false)}
         >
           <div
-            className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl transition-all"
+            className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-2xl bg-white p-5 sm:p-6 shadow-2xl transition-all"
             onClick={(e) => e.stopPropagation()}
           >
             <button

@@ -436,12 +436,31 @@ const BRAND_LOGOS = [
   },
 ];
 
-const VISIBLE_COUNT = 7;
 const PAUSE_DURATION_MS = 5000; // 5 seconds pause
 const TRANSITION_DURATION_MS = 750; // 750ms smooth sliding glide
 const EXTENDED_LOGOS = [...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS];
 
 export const TrustedVeterans: React.FC = () => {
+  // Dynamic visible count for true mobile/tablet/desktop responsiveness
+  const [visibleCount, setVisibleCount] = useState(7);
+
+  useEffect(() => {
+    const updateVisibleCount = () => {
+      if (typeof window === 'undefined') return;
+      if (window.innerWidth < 640) {
+        setVisibleCount(3);
+      } else if (window.innerWidth < 1024) {
+        setVisibleCount(5);
+      } else {
+        setVisibleCount(7);
+      }
+    };
+
+    updateVisibleCount();
+    window.addEventListener('resize', updateVisibleCount);
+    return () => window.removeEventListener('resize', updateVisibleCount);
+  }, []);
+
   // Start at the middle duplicate set for seamless 2-way infinite looping
   const [currentIndex, setCurrentIndex] = useState(BRAND_LOGOS.length);
   const [isTransitioning, setIsTransitioning] = useState(true);
@@ -540,12 +559,12 @@ export const TrustedVeterans: React.FC = () => {
           className="pointer-events-none absolute right-0 top-0 bottom-0 z-20 w-8 sm:w-14 bg-gradient-to-l from-white via-white/80 to-transparent"
         />
 
-        {/* Sliding Track: Exactly 7 Logos Visible per Line (100% / 7 = 14.2857%) */}
+        {/* Sliding Track: Responsive Logos Visible per Line (3 mobile, 5 tablet, 7 desktop) */}
         <div
           className="flex items-center pb-1 select-none"
           onTransitionEnd={handleTransitionEnd}
           style={{
-            transform: `translate3d(-${currentIndex * (100 / VISIBLE_COUNT)}%, 0, 0)`,
+            transform: `translate3d(-${currentIndex * (100 / visibleCount)}%, 0, 0)`,
             transition: isTransitioning
               ? `transform ${TRANSITION_DURATION_MS}ms cubic-bezier(0.25, 1, 0.5, 1)`
               : 'none',
@@ -556,8 +575,8 @@ export const TrustedVeterans: React.FC = () => {
             <div
               key={`${brand.name}-${index}`}
               style={{
-                width: `${100 / VISIBLE_COUNT}%`,
-                flex: `0 0 ${100 / VISIBLE_COUNT}%`,
+                width: `${100 / visibleCount}%`,
+                flex: `0 0 ${100 / visibleCount}%`,
               }}
               className="shrink-0 flex items-center justify-center px-1 sm:px-2 h-[46px] sm:h-[50px]"
             >
